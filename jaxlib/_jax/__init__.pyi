@@ -1340,6 +1340,9 @@ class Frame:
   def __repr__(self) -> str: ...
 
 class Traceback:
+  def __init__(self, /):
+    """Return a new Traceback object."""
+
   def __hash__(self, /):
     """Return hash(self)."""
 
@@ -1363,6 +1366,9 @@ class Traceback:
 
   def __ge__(self, value, /):
     """Return self>=value."""
+
+  def __add__(self, other: Traceback, /) -> Traceback:
+    """Return self+other."""
 
   @staticmethod
   def get_traceback() -> Traceback | None:
