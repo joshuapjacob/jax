@@ -146,4 +146,18 @@ jobs:
           halt-dispatch-input: ${{ inputs.halt-for-connection }}
       - name: Run Bazel TPU tests with build_jaxlib=${{ format('{0}', inputs.build_jaxlib) }}
         timeout-minutes: ${{ github.event_name == 'pull_request' && 20 || 210 }}
-        run: ./ci/run_bazel_test_tpu.sh
+        run: |
+          # echo "Assessing numpy version"
+          # cd dist
+          # git config --global --add safe.directory /__w/jax/jax
+          # wget https://files.pythonhosted.org/packages/10/a7/cfbe475c35371cae1358e61f20c5f075badc18c4797ab4354140e1d283cf/numpy-2.4.1-cp314-cp314t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+          # wheel unpack numpy-2.4.1-cp314-cp314t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+          # sed -i 's/Version: 2.4.1/Version: 999.9.9/g' numpy-2.4.1/numpy-2.4.1.dist-info/METADATA
+          # mv numpy-2.4.1/numpy-2.4.1.dist-info numpy-2.4.1/numpy-999.9.9.dist-info
+          # wheel pack numpy-2.4.1
+          # mv numpy-999.9.9-cp314-cp314t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl numpy-999.9.9-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+          # cd ..
+          # sed -i '/--hash=/d' build/requirements_lock_3_14_ft.txt
+          # sed -i "1i --find-links file://$PWD/dist" build/requirements_lock_3_14_ft.txt
+          # sed -i 's/^numpy==.*/numpy==999.9.9/g' build/requirements_lock_3_14_ft.txt
+          ./ci/run_bazel_test_tpu.sh

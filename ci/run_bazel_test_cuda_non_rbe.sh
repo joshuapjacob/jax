@@ -97,7 +97,6 @@ if [[ "$driver_major_version" -lt "580" ]]; then
   TEST_CONFIG="$TEST_CONFIG --repo_env=HERMETIC_CUDA_UMD_VERSION=13.0.0"
 fi
 
-
 # Don't abort the script if one command fails to ensure we run both test
 # commands below.
 set +e
