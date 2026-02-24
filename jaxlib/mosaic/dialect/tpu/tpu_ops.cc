@@ -188,6 +188,23 @@ LogicalResult MemRefSliceOp::verify() {
       isa<TiledLayoutAttr>(target_layout)) {
     return emitOpError("Source and target layouts must match.");
   }
+  auto tiled_layout = dyn_cast<TiledLayoutAttr>(source_layout);
+  if (!tiled_layout) {
+    return success();
+  }
+  ArrayRef<xla::Tile> tiles = tiled_layout.getTiles();
+  if (tiles.empty()) {
+    return success();
+  }
+  const xla::Tile& first_tile = tiles.front();
+  const int64_t tile_rank = first_tile.dimensions().size();
+  const int64_t rank = source_shape.size();
+  if (rank < tile_rank) {
+    return emitOpError("Source memref has ")
+           << rank << " dimensions, but the tiling has " << tile_rank
+           << " dimensions. The memref must have at least as many dimensions "
+              "as the tiling.";
+  }
   return success();
 }
 
