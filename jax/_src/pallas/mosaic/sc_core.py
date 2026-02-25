@@ -169,7 +169,7 @@ class ScalarSubcoreMesh:
 
   @property
   def shape(self):
-    return collections.OrderedDict(core=self.num_cores)
+    return collections.OrderedDict({self.axis_name: self.num_cores})
 
   @property
   def dimension_semantics(self) -> Sequence[str]:
@@ -206,12 +206,10 @@ def _scalar_subcore_mesh_discharge_rule(
     compiler_params = tpu_core.CompilerParams()
   if compiler_params.dimension_semantics is not None:
     raise ValueError("ScalarSubcoreMesh does not support dimension_semantics=")
-  sa_avals = [a for a in in_avals if isinstance(a, jax_core.ShapedArray)]
-  if sa_avals:
-    raise NotImplementedError(
-        f"Cannot close over values in core_map: {sa_avals}"
-    )
-
+  jaxpr, args, in_avals, out_avals = tpu_core.pass_scalars_as_refs(
+      jaxpr, args, in_avals, out_avals, mesh,
+      copy_to_smem=True,
+  )
   return pallas_core.default_mesh_discharge_rule(
       in_avals,
       out_avals,
@@ -272,8 +270,10 @@ class VectorSubcoreMesh:
 
   @property
   def shape(self):
-    return collections.OrderedDict(
-        core=self.num_cores, subcore=self.num_subcores)
+    return collections.OrderedDict({
+        self.core_axis_name: self.num_cores,
+        self.subcore_axis_name: self.num_subcores,
+    })
 
   @property
   def dimension_semantics(self) -> Sequence[str]:
