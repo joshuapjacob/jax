@@ -91,8 +91,8 @@ jobs:
       enable-x64:  ${{ matrix.enable-x64 }}
       gcs_download_uri: ${{inputs.gcs_download_uri}}
       halt-for-connection: ${{inputs.halt-for-connection}}
-      build_jaxlib: "false"
-      build_jax: "false"
+      build_jaxlib: ${{ 'false' }}
+      build_jax: ${{ 'false' }}
       clone_main_xla: 0
 
   run-pytest-cuda:
@@ -165,11 +165,11 @@ jobs:
       enable-x64:  ${{ matrix.enable-x64 }}
       gcs_download_uri: ${{inputs.gcs_download_uri}}
       halt-for-connection: ${{inputs.halt-for-connection}}
-      build_jaxlib: "false"
-      build_jax: "false"
+      build_jaxlib: ${{ 'false' }}
+      build_jax: ${{ 'false' }}
       jaxlib-version: "head"
       write_to_bazel_remote_cache: 1
-      run_multiaccelerator_tests: "true"
+      run_multiaccelerator_tests: ${{ 'true' }}
       clone_main_xla: 0
 
   run-pytest-rocm:
@@ -325,8 +325,8 @@ jobs:
       skip-download-jaxlib-from-gcs: ${{inputs.skip-download-jaxlib-and-plugins-from-gcs}}
       gcs_download_uri: ${{inputs.gcs_download_uri}}
       halt-for-connection: ${{inputs.halt-for-connection}}
-      build_jaxlib: "false"
-      build_jax: "false"
+      build_jaxlib: ${{ 'false' }}
+      build_jax: ${{ 'false' }}
       jaxlib-version: "head"
       clone_main_xla: 0
 
